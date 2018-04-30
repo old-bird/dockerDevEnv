@@ -1,0 +1,100 @@
+version: '3.0'
+
+services:
+  ops-discovery:
+    image: me.cloud.cloud/ops-discovery  #从已有的镜像创建
+    container_name: ops-discovery
+    hostname: ops-discovery
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+    ports:                       #暴露端口信息，并映射到宿主机
+      - "8761:8761"
+    expose:
+      - 8761
+    external_links:
+      - logstash
+
+  ops-config:
+      image: me.cloud.cloud/ops-config  #从已有的镜像创建
+      container_name: ops-config
+      hostname: ops-config
+      environment:
+        - "SPRING_PROFILES_ACTIVE=docker"
+      depends_on:                  #依赖某个服务
+        - ops-discovery
+      ports:                       #暴露端口信息，并映射到宿主机
+        - "8888:8888"
+      expose:
+        - 8888
+      external_links:
+        - logstash
+
+  ops-monitor:
+      image: me.cloud.cloud/ops-monitor  #从已有的镜像创建
+      container_name: ops-monitor
+      hostname: ops-monitor
+      environment:
+        - "SPRING_PROFILES_ACTIVE=docker"
+      depends_on:                  #依赖某个服务
+        - ops-discovery
+        - ops-config
+      ports:                       #暴露端口信息，并映射到宿主机
+        - "8989:8989"
+      expose:
+        - 8989
+      external_links:
+        - logstash
+
+# 使用已经创建的网络
+networks:
+  default:
+    external:
+      name: vortex
+
+
+
+
+
+#
+#
+#  范例
+#ops-discovery:
+#    build:                       #从本地路径的Dockerfile 创建
+#    image: vortex/ops-discovery  #从已有的镜像创建
+#    extends:                     #扩展另一个服务，可以覆盖其中的一些选项
+#    depends_on:                  #依赖某个服务
+#    ports:                       #暴露端口信息，并映射到宿主机
+#      - "8761:8761"
+#    expose:                      #暴露端口，但不映射到宿主机，只被连接的服务访问
+#    volumes:                     #卷挂载路径设置
+#      - /var/lib/ops-discovery
+#    volumes_from:                #从另一个服务或容器挂载它的所有卷
+#    environment:                 #设置环境变量
+#      - "SPRING_PROFILES_ACTIVE=docker"
+#    env_file:                    #从文件中获取环境变量，可以为单独的文件路径或列表
+#    networks:
+#      - docker_vortex
+#
+#    links:                  #链接到其它服务中的容器
+#    external_links:         #链接到 docker-compose.yml 外部的容器
+#    command:                #覆盖容器启动后默认执行的命令
+#    dns:
+#    dns_search:
+
+#  zookeeper 容器服务另启
+#  zookeeper:
+#    image: zookeeper #从已有的镜像创建
+#    container_name: zookeeper
+#    hostname: zookeeper
+#    ports:                       #暴露端口信息，并映射到宿主机
+#      - "2181:2181"
+#      - "2888:2888"
+#      - "3888:3888"
+#    expose:
+#      - 2181
+#      - 2888
+#      - 3888
+
+#networks:
+#  vortex:
+#    driver: bridge

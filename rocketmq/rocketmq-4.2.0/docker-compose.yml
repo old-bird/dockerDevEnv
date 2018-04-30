@@ -1,0 +1,36 @@
+version: '2'
+services:
+  namesrv:
+    container_name: rmqnamesrv
+    hostname: rmqnamesrv
+    build:
+      context: rocketmq-4.2.0/namesrv
+      args:
+        - version=4.2.0
+    ports:
+      - 9876:9876
+    volumes:
+#      - ./namesrv/logs:/opt/logs
+#      - ./namesrv/store:/opt/store
+      - ./namesrv/conf/broker.conf:/opt/rocketmq-4.2.0/conf/broker.conf
+  broker:
+    container_name: rmqbroker
+    hostname: rmqbroker
+    build:
+      context: rocketmq-4.2.0/broker
+      args:
+        - version=4.2.0
+    ports:
+      - 10909:10909
+      - 10911:10911
+    volumes:
+#      - ./broker/logs:/opt/logs
+#      - ./broker/store:/opt/store
+      - ./broker/conf/broker.conf:/opt/rocketmq-4.2.0/conf/broker.conf
+    links:
+      - namesrv
+    depends_on:
+      - namesrv
+    environment:
+      - NAMESRV_ADDR=rmqnamesrv:9876
+      - JAVA_OPT_EXT=-server -Xms128m -Xmx128m -Xmn128m

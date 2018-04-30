@@ -1,0 +1,53 @@
+version: '3.0'
+
+services:
+  elasticsearch:
+    build: elasticsearch/
+    container_name: elasticsearch
+    hostname: elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    expose:
+      - 9200
+      - 9300
+    environment:
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+    volumes:
+      - ~/docker/volume/elasticsearch/data:/usr/share/elasticsearch/data
+#      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+
+
+  logstash:
+    build: logstash/
+    container_name: logstash
+    hostname: logstash
+    command: -f /etc/logstash/conf.d/
+    volumes:
+      - ./logstash/config:/etc/logstash/conf.d
+    ports:
+      - "5000:5000"
+    expose:
+      - 5000
+    links:
+      - elasticsearch
+    depends_on:
+      - elasticsearch
+#    environment:  #The Logstash container use the LS_HEAP_SIZE environment variable to determine how much memory should be associated to the JVM heap memory (defaults to 500m).
+#      - LS_HEAP_SIZE=2048m
+
+
+  kibana:
+    build: kibana/
+    container_name: kibana
+    hostname: kibana
+    volumes:
+      - ./kibana/config/:/etc/kibana/
+    ports:
+      - "5601:5601"
+    expose:
+      - 5601
+    links:
+      - elasticsearch
+    depends_on:
+      - elasticsearch
