@@ -32,12 +32,6 @@ RUN mkdir -p \
 		/opt/logs \
 	    /opt/store
 
-#RUN curl https://dist.apache.org/repos/dist/release/rocketmq/${ROCKETMQ_VERSION}/rocketmq-all-${ROCKETMQ_VERSION}-bin-release.zip -o rocketmq.zip \
-#          && unzip rocketmq.zip \
-#          && mv rocketmq-all*/* . \
-#          && rmdir rocketmq-all*  \
-#          && rm rocketmq.zip
-
 RUN curl http://mirror.bit.edu.cn/apache/rocketmq/${ROCKETMQ_VERSION}/rocketmq-all-${ROCKETMQ_VERSION}-bin-release.zip -o rocketmq-all-${ROCKETMQ_VERSION}-bin-release.zip \
           && unzip rocketmq-all-${ROCKETMQ_VERSION}-bin-release.zip \
           && rm rocketmq-all-${ROCKETMQ_VERSION}-bin-release.zip
@@ -45,7 +39,8 @@ RUN curl http://mirror.bit.edu.cn/apache/rocketmq/${ROCKETMQ_VERSION}/rocketmq-a
 
 RUN chmod +x bin/mqbroker
 
-CMD cd ${ROCKETMQ_HOME}/bin && export JAVA_OPT=" -Duser.home=/opt" && sh mqbroker -n rmqnamesrv:9876 autoCreateTopicEnable=true -c /opt/rocketmq-${ROCKETMQ_VERSION}/conf/broker.conf
+CMD cd ${ROCKETMQ_HOME}/bin && export JAVA_OPT=" -Duser.home=/opt" && sh mqbroker -n namesrv:9876 \
+    -c /opt/rocketmq-${ROCKETMQ_VERSION}/conf/broker.conf
 
 
 EXPOSE 10909 10911
