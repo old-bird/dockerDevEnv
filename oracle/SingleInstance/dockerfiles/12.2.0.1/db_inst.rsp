@@ -104,7 +104,7 @@ oracle.install.db.OSKMDBA_GROUP=dba
 oracle.install.db.OSRACDBA_GROUP=dba
 
 #------------------------------------------------------------------------------
-# Specify whether to enable the user to set the password for
+# Specify whether to enabled the user to set the password for
 # My Oracle Support credentials. The value can be either true or false.
 # If left blank it will be assumed to be false.
 #

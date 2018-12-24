@@ -2,23 +2,17 @@ version: '2'
 services:
   namesrv:
     container_name: namesrv
-    hostname: namesrv
     build:
       context: namesrv
       args:
         - version=4.2.0
     ports:
       - 9876:9876
-#    volumes:
-#      - ./namesrv/conf/broker.conf:/opt/rocketmq-4.2.0/conf/broker.conf
-#      - ./namesrv/logs:/opt/logs
-#      - ./namesrv/store:/opt/store
     environment:
       - JAVA_OPT_EXT=-server -Xms128m -Xmx128m -Xmn128m
 
   broker:
     container_name: broker
-    hostname: broker
     build:
       context: broker
       args:
@@ -28,8 +22,6 @@ services:
       - 10911:10911
     volumes:
       - ./broker/conf/broker.conf:/opt/rocketmq-4.2.0/conf/broker.conf
-#      - ./broker/logs:/opt/logs
-#      - ./broker/store:/opt/store
     links:
       - namesrv
     depends_on:

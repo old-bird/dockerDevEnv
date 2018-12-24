@@ -124,9 +124,9 @@ To add plugins to logstash you have to:
 1. Add a RUN statement to the `logstash/Dockerfile` (ex. `RUN logstash-plugin install logstash-filter-json`)
 2. Add the associated plugin code configuration to the `logstash/config/logstash.conf` file
 
-## How can I enable a remote JMX connection to Logstash?
+## How can I enabled a remote JMX connection to Logstash?
 
-As for the Java heap memory, another environment variable allows to specify JAVA_OPTS used by Logstash. You'll need to specify the appropriate options to enable JMX and map the JMX port on the docker host.
+As for the Java heap memory, another environment variable allows to specify JAVA_OPTS used by Logstash. You'll need to specify the appropriate options to enabled JMX and map the JMX port on the docker host.
 
 Update the container in the `docker-compose.yml` to add the *LS_JAVA_OPTS* environment variable with the following content (I've mapped the JMX service on the port 18080, you can change that), do not forget to update the *-Djava.rmi.server.hostname* option with the IP address of your Docker host (replace **DOCKER_HOST_IP**):
 
